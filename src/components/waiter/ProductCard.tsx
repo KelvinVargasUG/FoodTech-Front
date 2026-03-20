@@ -12,7 +12,7 @@ interface ProductCardProps {
 export const ProductCard = ({ product, isInOrder, onAdd }: ProductCardProps) => {
   return (
     <div
-      data-testid={`product-card-${product.name.replace(/\s+/g, '-').toLowerCase()}`}
+      data-testid={`product-item-${product.name.replace(/\s+/g, '-').toLowerCase()}`}
       data-product-name={product.name}
       data-product-type={product.type}
       data-is-in-order={isInOrder}
@@ -54,7 +54,7 @@ export const ProductCard = ({ product, isInOrder, onAdd }: ProductCardProps) => 
 
       {/* Add Button */}
       <button 
-        data-testid={`add-product-btn-${product.name.replace(/\s+/g, '-').toLowerCase()}`}
+        data-testid="add-order-btn"
         className={`w-full py-3.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
           isInOrder 
             ? 'gold-gradient text-midnight shadow-lg shadow-primary/10'

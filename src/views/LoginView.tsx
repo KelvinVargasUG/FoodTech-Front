@@ -121,7 +121,7 @@ export const LoginView = () => {
 
           {/* Error */}
           {error && (
-            <div className="text-red-400 text-sm text-center">
+            <div className="text-red-400 text-sm text-center" data-testid="error-message">
               {error}
             </div>
           )}
@@ -162,6 +162,7 @@ export const LoginView = () => {
           {/* Button */}
           <button
             type="submit"
+            data-testid="login-button"
             disabled={isLoading}
             className="w-full py-3 rounded-xl bg-primary text-black font-semibold
                        hover:opacity-90 transition-all duration-200
@@ -178,6 +179,7 @@ export const LoginView = () => {
               type="button"
               onClick={toggleMode}
               className="text-sm text-primary hover:underline"
+              data-testid="register-link"
             >
               {isRegisterMode 
                 ? '¿Ya tienes cuenta? Iniciar sesión' 

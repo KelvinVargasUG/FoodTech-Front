@@ -35,8 +35,8 @@ export const CompletedOrdersWidget = () => {
     setIsOpen(false);
   };
 
-  const handleInvoice = async (orderId: number, customerName: string) => {
-    const remainingCount = await requestInvoice(orderId, customerName);
+  const handleInvoice = async (orderId: number) => {
+    const remainingCount = await requestInvoice(orderId);
     setToastMessage(
       'Factura enviada correctamente. En unos minutos llegara al correo del cliente.'
     );

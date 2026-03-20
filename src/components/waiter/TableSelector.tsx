@@ -39,7 +39,7 @@ export const TableSelector = ({
         <p className="text-[11px] uppercase tracking-widest text-silver-text px-3 mb-4">
           Zona Activa
         </p>
-        <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-2 gap-2.5" data-testid="table-grid">
           {tables.map((table) => (
             <TableCard
               key={table.id}

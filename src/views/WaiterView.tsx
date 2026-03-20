@@ -45,6 +45,10 @@ export const WaiterView = () => {
     ProductType | 'ALL'
   >('ALL');
 
+  // Datos del cliente
+  const [customerName, setCustomerName] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
+
   /**
    * Sincroniza el estado de las mesas con las tareas cada vez que cambian
    */
@@ -60,8 +64,16 @@ export const WaiterView = () => {
       alert('Por favor selecciona una mesa');
       return;
     }
+    if (!customerName.trim()) {
+      alert('Por favor ingresa el nombre del cliente');
+      return;
+    }
+    if (!customerEmail.trim()) {
+      alert('Por favor ingresa el correo del cliente');
+      return;
+    }
 
-    const response = await submitOrder(selectedTable.number);
+    const response = await submitOrder(selectedTable.number, customerName.trim(), customerEmail.trim());
 
     if (response) {
       // Marcar mesa como ocupada
@@ -73,6 +85,8 @@ export const WaiterView = () => {
       alert(
         `✅ ${response.message}\n\nMesa: ${response.tableNumber}\nTareas creadas: ${response.tasksCreated}`
       );
+      setCustomerName('');
+      setCustomerEmail('');
     } else if (error) {
       alert(`❌ Error: ${error}`);
     }
@@ -149,6 +163,10 @@ export const WaiterView = () => {
           totalItems={totalItems}
           totalPrice={totalPrice}
           isSubmitting={isSubmitting}
+          customerName={customerName}
+          customerEmail={customerEmail}
+          onCustomerNameChange={setCustomerName}
+          onCustomerEmailChange={setCustomerEmail}
           onRemoveProduct={removeProduct}
           onSubmit={handleSubmitOrder}
         />

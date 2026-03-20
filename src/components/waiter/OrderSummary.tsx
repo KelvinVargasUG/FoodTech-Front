@@ -5,6 +5,10 @@ interface OrderSummaryProps {
   totalItems: number;
   totalPrice: number;
   isSubmitting: boolean;
+  customerName: string;
+  customerEmail: string;
+  onCustomerNameChange: (value: string) => void;
+  onCustomerEmailChange: (value: string) => void;
   onRemoveProduct: (productName: string) => void;
   onSubmit: () => void;
 }
@@ -17,6 +21,10 @@ export const OrderSummary = ({
   totalItems,
   totalPrice,
   isSubmitting,
+  customerName,
+  customerEmail,
+  onCustomerNameChange,
+  onCustomerEmailChange,
   onRemoveProduct,
   onSubmit,
 }: OrderSummaryProps) => {
@@ -31,6 +39,26 @@ export const OrderSummary = ({
             <span className="hidden sm:inline">Orden </span>Activa
           </span>
         )}
+      </div>
+
+      {/* Datos del Cliente */}
+      <div className="mb-4 sm:mb-6 space-y-3">
+        <input
+          data-testid="customer-name-input"
+          type="text"
+          placeholder="Nombre del cliente"
+          value={customerName}
+          onChange={(e) => onCustomerNameChange(e.target.value)}
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white-text placeholder-silver-text/50 focus:outline-none focus:border-primary/50"
+        />
+        <input
+          data-testid="customer-email-input"
+          type="email"
+          placeholder="Correo del cliente"
+          value={customerEmail}
+          onChange={(e) => onCustomerEmailChange(e.target.value)}
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white-text placeholder-silver-text/50 focus:outline-none focus:border-primary/50"
+        />
       </div>
 
       {/* Lista de Productos */}
@@ -87,7 +115,7 @@ export const OrderSummary = ({
 
           {/* Botón Enviar */}
           <button
-            data-testid="submit-order-btn"
+            data-testid="send-to-kitchen-btn"
             onClick={onSubmit}
             disabled={isSubmitting}
             className="w-full mt-4 sm:mt-6 lg:mt-8 py-3 sm:py-4 lg:py-5 gold-gradient hover:brightness-110 active:scale-[0.98] transition-all rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-black tracking-[0.15em] sm:tracking-[0.2em] uppercase shadow-2xl shadow-primary/20 flex items-center justify-center gap-2 sm:gap-3 text-midnight disabled:opacity-50 disabled:cursor-not-allowed"

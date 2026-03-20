@@ -16,6 +16,7 @@ export const CompletedOrdersButton = ({
       aria-busy={isLoading}
       aria-label="Open completed orders"
       className="fixed bottom-6 right-6 z-50 gold-gradient text-midnight shadow-2xl shadow-primary/20 rounded-full h-14 w-14 flex items-center justify-center transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+      data-testid="completed-orders-btn"
     >
       <span
         className={`material-symbols-outlined text-2xl ${

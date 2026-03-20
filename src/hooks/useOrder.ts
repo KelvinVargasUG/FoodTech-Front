@@ -79,7 +79,7 @@ export const useOrder = () => {
    * Envía el pedido al backend
    */
   const submitOrder = useCallback(
-    async (tableNumber: string): Promise<CreateOrderResponse | null> => {
+    async (tableNumber: string, customerName: string, customerEmail: string): Promise<CreateOrderResponse | null> => {
       if (orderProducts.length === 0) {
         setError('El pedido debe contener al menos un producto');
         return null;
@@ -92,8 +92,10 @@ export const useOrder = () => {
         // Convertir a formato del backend
         const request: CreateOrderRequest = {
           tableNumber,
+          customerName,
+          customerEmail,
           products: orderProducts.flatMap((op) =>
-            Array(op.quantity).fill({ name: op.name, type: op.type })
+            Array(op.quantity).fill({ name: op.name, type: op.type, price: op.price })
           ),
         };
 

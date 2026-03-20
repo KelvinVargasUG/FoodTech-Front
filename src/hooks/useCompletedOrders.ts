@@ -70,15 +70,13 @@ export const useCompletedOrders = () => {
   };
 
   const requestInvoice = useCallback(
-    async (orderId: number, nombreCliente: string): Promise<number> => {
+    async (orderId: number): Promise<number> => {
       const orderKey = String(orderId);
       setInvoiceLoadingById((prev) => ({ ...prev, [orderKey]: true }));
       setInvoiceErrorById((prev) => ({ ...prev, [orderKey]: '' }));
 
       try {
-        await apiClient.postNoContent(`/api/orders/${orderId}/invoice`, {
-          nombreCliente,
-        });
+        await apiClient.postNoContent(`/api/orders/${orderId}/invoice`, {});
         setCompletedOrders((prev) =>
           prev.filter((order) => order.id !== orderKey)
         );

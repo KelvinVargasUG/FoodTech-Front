@@ -1,5 +1,5 @@
 # Plan de Validación del Sistema
-## FoodTech Frontend – Resumen para Stakeholders
+## FoodTech Frontend
 
 **Versión:** 1.0  
 **Fecha:** 2026-03-06 
@@ -30,13 +30,6 @@ Durante este ciclo se validarán las funcionalidades principales relacionadas co
 - Manejo de errores de autenticación
 
 Estas funcionalidades son críticas para asegurar que **solo usuarios autorizados puedan utilizar el sistema**.
-
-## Funcionalidades fuera de alcance
-
-- Integración con sistemas de pago
-- Integraciones externas que no afectan el acceso al sistema
-
----
 
 # 3. Historias de usuario cubiertas
 
@@ -117,7 +110,7 @@ El ciclo de pruebas se considerará exitoso cuando se cumplan las siguientes con
 - Las validaciones de seguridad del acceso de usuarios funcionen correctamente.
 - Las pruebas definidas para los flujos principales se ejecuten sin fallos.
 
----
+--- 
 
 # 6. Control de calidad automático
 

@@ -15,7 +15,7 @@ export const TableCard = ({ table, isSelected, onSelect }: TableCardProps) => {
 
   return (
     <div
-      data-testid={`table-card-${table.number}`}
+      data-testid={`table-item-${table.id}`}
       data-table-id={table.id}
       data-table-number={table.number}
       data-table-status={table.status}

@@ -61,7 +61,7 @@ export const authService = {
 
   async register(email: string, username: string, password: string): Promise<boolean> {
     try {
-      await fetch(`${API_BASE_URL}/api/auth/register`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,15 +69,25 @@ export const authService = {
         body: JSON.stringify({ email, username, password }),
       })
 
-      return true
+      if (!response.ok) {
+        let message = `Error: ${response.status}`;
+        try {
+          const data = await response.json();
+          if (data && (data.message || data.error)) {
+            message = data.message || data.error;
+          }
+        } catch {}
+        throw new Error(message);
+      }
+      return true;
     } catch (error) {
       if (error instanceof TypeError || error instanceof Error && error.message.includes('Failed to fetch')) {
-        throw new Error('Error de conexión')
+        throw new Error('Error de conexión');
       }
       if (error instanceof Error) {
-        throw error
+        throw error;
       }
-      throw new Error('Error desconocido')
+      throw new Error('Error desconocido');
     }
   },
   

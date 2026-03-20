@@ -17,6 +17,7 @@ export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus];
 export interface CreateOrderProduct {
   name: string;
   type: ProductType;
+  price: number;
 }
 
 /**
@@ -24,6 +25,8 @@ export interface CreateOrderProduct {
  */
 export interface CreateOrderRequest {
   tableNumber: string;
+  customerName: string;
+  customerEmail: string;
   products: CreateOrderProduct[];
 }
 
