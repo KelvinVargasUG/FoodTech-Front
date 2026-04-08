@@ -6,9 +6,6 @@ interface ProductCardProps {
   onAdd: (product: Product) => void;
 }
 
-/**
- * Tarjeta de producto individual del menú
- */
 export const ProductCard = ({ product, isInOrder, onAdd }: ProductCardProps) => {
   return (
     <div
@@ -26,7 +23,7 @@ export const ProductCard = ({ product, isInOrder, onAdd }: ProductCardProps) => 
         }
       `}
     >
-      {/* Image */}
+      {}
       <div className="h-48 rounded-xl overflow-hidden relative">
         <img 
           alt={product.name} 
@@ -40,7 +37,7 @@ export const ProductCard = ({ product, isInOrder, onAdd }: ProductCardProps) => 
         )}
       </div>
 
-      {/* Info */}
+      {}
       <div className="flex justify-between items-start px-1">
         <div>
           <h3 data-testid="product-name" className={`font-bold text-lg transition-colors ${isInOrder ? 'text-primary' : 'text-white-text group-hover:text-primary'}`}>
@@ -52,7 +49,7 @@ export const ProductCard = ({ product, isInOrder, onAdd }: ProductCardProps) => 
         </div>
       </div>
 
-      {/* Add Button */}
+      {}
       <button 
         data-testid="add-order-btn"
         className={`w-full py-3.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${

@@ -1376,12 +1376,32 @@ localStorage.setItem('auth_token_expiry', expiredDate.toString())
 
 | Tipo | Cantidad | Descripción |
 |------|----------|-------------|
-| **Verifica (GREEN)** | 30+ | El código funciona correctamente |
-| **Valida (RED→GREEN)** | 17+ | Las reglas de negocio se protegen |
+| **Verifica (GREEN)** | 140+ | El código funciona correctamente |
+| **Valida (RED→GREEN)** | 33+ | Las reglas de negocio se protegen |
 
 ## Coverage
 
 - **authService:** 97.36% statements, 88.88% branches
+- **productService:** cubierto (12 tests)
+- **useBulkUpload:** cubierto (5 tests)
+- **useCatalog:** cubierto (7 tests)
+- **useOrder:** cubierto (12 tests)
+
+## Estado Actual
+
+| Métrica | Valor |
+|---------|-------|
+| Total test files | 61 |
+| Tests totales | 173 |
+| Tests pasando | 171 |
+| **Tests fallando** | **2** |
+
+### Tests Fallando (pendiente de fix)
+
+| Archivo | Test | Causa |
+|---------|------|-------|
+| `src/services/authService.test.ts` | `debe retornar true aunque el servidor devuelva error 400` | El servicio lanza error en 400, el test espera `true` |
+| `src/tests/auth/13-auth-register-error.test.ts` | `debe manejar error cuando el servidor devuelve error 400` | Mismo desajuste: comportamiento de `register()` cambió |
 
 ---
 
@@ -1393,6 +1413,9 @@ localStorage.setItem('auth_token_expiry', expiredDate.toString())
 |----|---------|--------|------------|---------|------|-------|
 | HU-FRONT-001 | Login | ✅ Completado | `LoginView.tsx` | `authService.ts` | `useAuth.ts` | 48 tests |
 | HU-FRONT-002 | Registro de Usuario | ✅ Completado | `LoginView.tsx` | `authService.ts` | `useAuth.ts` | 15 tests |
+| HU-FRONT-004 | Catálogo de productos | ✅ Completado | `ProductGrid.tsx` | `productService.ts` | `useCatalog.ts` | 22 tests |
+| HU-FRONT-005 | Carga masiva CSV | ✅ Completado | `CSVUploader.tsx`, `UploadSummaryPanel.tsx` | `bulkUploadService.ts` | `useBulkUpload.ts` | 14 tests |
+| HU-FRONT-006 | Pedidos completados | ✅ Completado | `CompletedOrdersButton.tsx`, `CompletedOrdersToast.tsx` | — | `useOrder.ts` | 17 tests |
 
 ## 9.2 Detalle: Login (HU-FRONT-001)
 
@@ -1432,34 +1455,200 @@ localStorage.setItem('auth_token_expiry', expiredDate.toString())
 - ✅ Validación de campos
 - ✅ Manejo de errores (username duplicado, error de red)
 
-## 9.4 HU Pendientes (Sin iniciar)
+## 9.4 Detalle: Catálogo de Productos (HU-FRONT-004)
+
+**Estado:** ✅ Completado
+
+**Componentes:**
+- `src/components/waiter/ProductGrid.tsx` - Grid de productos con filtros
+- `src/services/productService.ts` - CRUD de productos contra la API
+- `src/hooks/useCatalog.ts` - Hook que gestiona estado del catálogo
+
+**Funcionalidades implementadas:**
+- ✅ Listar productos activos
+- ✅ Filtrar por tipo (BAR, HOT_KITCHEN, COLD_KITCHEN)
+- ✅ Búsqueda por nombre
+- ✅ Crear/actualizar producto
+- ✅ Activar/desactivar producto
+
+---
+
+## 9.5 Detalle: Carga Masiva CSV (HU-FRONT-005)
+
+**Estado:** ✅ Completado
+
+**Componentes:**
+- `src/components/admin/CSVUploader.tsx` - Drag-and-drop para subir CSV
+- `src/components/admin/UploadSummaryPanel.tsx` - Panel de resultados
+- `src/services/bulkUploadService.ts` - Comunicación chunked con el backend
+- `src/hooks/useBulkUpload.ts` - Orquesta el flujo init → chunks → complete
+
+**Funcionalidades implementadas:**
+- ✅ Validación de headers CSV antes de subir
+- ✅ Upload en chunks (512 KB)
+- ✅ Panel de resumen (total, procesados, errores)
+- ✅ Descarga de errores en CSV
+- ✅ Descarga de plantilla de ejemplo
+
+---
+
+## 9.6 HU Pendientes (Sin iniciar)
 
 | HU | Feature | Estado | Tests |
 |----|---------|--------|-------|
 | HU-FRONT-003 | Login con remember me | ⏳ Pendiente | 0 |
-| HU-FRONT-004 | Reset password | ⏳ Pendiente | 0 |
-| HU-FRONT-005 | Logout automático por inactividad | ⏳ Pendiente | 0 |
+| HU-FRONT-007 | Reset password | ⏳ Pendiente | 0 |
+| HU-FRONT-008 | Logout automático por inactividad | ⏳ Pendiente | 0 |
+
+---
+
+# PARTE 11: NUEVAS SUITES DE TESTS
+
+## 11.1 productService (12 tests)
+
+**Archivo:** `src/services/productService.test.ts`
+
+**Qué cubre:** CRUD de productos via `apiClient` (GET, POST, PATCH, PUT). Mockea `apiClient` directamente.
+
+**Tests incluidos:**
+- `getActiveProducts` — lista productos activos
+- `createProduct` — crea con datos válidos, maneja error 400
+- `updateProduct` — actualiza campos parcialmente
+- `toggleProductStatus` — activa/desactiva producto
+
+---
+
+## 11.2 useCatalog (7 tests)
+
+**Archivo:** `src/hooks/useCatalog.test.ts`
+
+**Qué cubre:** Hook que gestiona el catálogo de productos para el frontend. Mockea `productService`.
+
+**Tests incluidos:**
+- Estado inicial: lista vacía, `isLoading=false`
+- `loadProducts` — carga y almacena productos
+- `filterByType` — filtra por HOT_DISH, DRINK, COLD_DISH
+- `searchByName` — búsqueda por texto
+- Manejo de error en carga
+
+---
+
+## 11.3 useOrder (12 tests)
+
+**Archivo:** `src/hooks/useOrder.test.ts`
+
+**Qué cubre:** Hook que gestiona el estado del pedido activo. Mockea `orderService`.
+
+**Tests incluidos:**
+- `addProduct` — agrega producto nuevo y acumula cantidad
+- `removeProduct` — elimina del pedido
+- `updateQuantity` — cambia cantidad
+- `clearOrder` — vacía el pedido
+- `submitOrder` — envía pedido y limpia estado
+- `calculateTotal` — cálculo de total del pedido
+
+---
+
+## 11.4 CSVUploader (4 tests)
+
+**Archivo:** `src/components/admin/CSVUploader.test.tsx`
+
+**Qué cubre:** Componente de drag-and-drop para subir archivos CSV.
+
+**Tests incluidos:**
+- Renderiza zona de carga y botón de plantilla
+- `onDownloadTemplate` se llama al click
+- `onFileSelect` se llama al seleccionar archivo
+- Estado visual de carga
+
+---
+
+## 11.5 UploadSummaryPanel (5 tests)
+
+**Archivo:** `src/components/admin/UploadSummaryPanel.test.tsx`
+
+**Qué cubre:** Panel de resumen tras carga masiva. Muestra total, procesados, errores.
+
+**Tests incluidos:**
+- Renderiza correctamente los conteos
+- Muestra botón de descarga de errores cuando `failedRecords > 0`
+- Oculta botón de errores cuando no hay fallas
+- `onDownloadErrors` se llama al click
+- Estado COMPLETED vs IN_PROGRESS
+
+---
+
+## 11.6 useBulkUpload (5 tests)
+
+**Archivo:** `src/hooks/useBulkUpload.test.ts`
+
+**Qué cubre:** Hook que orquesta el flujo completo de carga masiva (init → chunks → complete). Mockea `bulkUploadService` y `validateCsvHeaders`.
+
+**Tests incluidos:**
+- Estado inicial correcto
+- `uploadFile` — flujo completo feliz
+- `uploadFile` — falla si headers CSV inválidos
+- `downloadErrors` — descarga errores
+- `downloadTemplate` — descarga plantilla
+
+---
+
+## 11.7 CompletedOrders (5 tests)
+
+**Archivos:**
+- `src/components/completed-orders/CompletedOrdersButton.test.tsx` (3 tests)
+- `src/components/completed-orders/CompletedOrdersToast.test.tsx` (2 tests)
+
+**Tests incluidos:**
+- `CompletedOrdersButton` — llama `onToggle`, muestra badge con count, spinner de loading
+- `CompletedOrdersToast` — renderiza lista de pedidos completados, mensaje vacío
+
+---
+
+## 11.8 Helpers y App (8 tests)
+
+| Archivo | Tests | Qué cubre |
+|---------|-------|-----------|
+| `src/helpers/orderCalculator.test.ts` | 6 | Cálculo de totales, subtotales, propina |
+| `src/App.test.tsx` | 2 | Rutas principales renderizan sin crash |
+
+---
+
+## 11.9 LoginView (17 tests) — Suite nueva
+
+**Archivo:** `src/views/LoginView.test.tsx`
+
+Suite consolidada del componente LoginView con 17 tests que cubren formulario login, registro, toggle de modo, submit, errores y estado de carga.
 
 ---
 
 # PARTE 10: COMANDOS
 
 ```bash
-npm test -- --run        # Ejecutar tests
+npm test -- --run        # Ejecutar todos los tests
 npm test -- --coverage   # Tests con coverage
 npm run lint             # Verificar código
 npm run build            # Compilar
+
+# Filtrar por suite específica
+npm test -- --run src/tests/auth/          # Solo auth
+npm test -- --run src/hooks/               # Solo hooks
+npm test -- --run src/components/admin/    # Solo carga masiva
 ```
 
 ---
 
 # PARTE 9: ORDEN PARA PRESENTACIÓN
 
-1. **TESTING_STRATEGY.md** - "Tenemos una estrategia clara"
+1. **TESTING_STRATEGY.md** - "Tenemos una estrategia clara: 173 tests, 5 HUs"
 2. **Test 45** - "Verificar arquitectura: endpoint correcto"
 3. **Test 46** - "Validar negocio: token expirado = sin acceso"
 4. **Test 18** - "Ejemplo de mocks: fetch + router"
 5. **Test 19** - "Validación: error no crea sesión"
-6. **Correr tests:** `npm test -- --coverage`
-7. **Mostrar coverage:** authService 97.36%
-8. **Pipeline CI:** GitHub Actions configurado
+6. **useCatalog.test.ts** - "Nueva HU-04: catálogo con filtros"
+7. **useBulkUpload.test.ts** - "Nueva HU-05: carga masiva CSV"
+8. **Correr tests:** `npm test -- --run`
+9. **Mostrar coverage:** `npm test -- --coverage`
+10. **Pipeline CI:** GitHub Actions configurado
+
+> **Nota:** 2 tests fallan actualmente (`13-auth-register-error.test.ts` y `authService.test.ts`) por desajuste en el comportamiento de `register()` con error 400. Pendiente de corrección.

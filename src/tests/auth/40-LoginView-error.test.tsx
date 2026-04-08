@@ -25,7 +25,7 @@ describe('LoginView', () => {
 
   it('debe mostrar mensaje de error cuando hay error', () => {
     renderWithRouter(<LoginView />)
-    
+
     expect(screen.getByText('Credenciales inválidas')).toBeInTheDocument()
   })
 })

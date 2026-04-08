@@ -1,15 +1,4 @@
-# GitHub Branch Protection Rules
-# Configuración de reglas de protección de ramas para FoodTech
-# Referencia: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches
 
-## Main Branch (Producción)
-# Reglas para: main
-# - Requiere 1+ aprobación de código
-# - Tests deben pasar (status checks required)
-# - No permite force push
-# - Bloquea merges de ramas obsoletas
-
-### Configuración Recomendada en Settings > Branches > Branch Protection Rules
 
 **Branch pattern:** `main`
 
@@ -33,12 +22,6 @@
 
 ---
 
-## Develop Branch (Integración)
-# Reglas para: develop
-# - Requiere 2+ aprobaciones
-# - Tests obligatorios
-# - Solo administradores pueden mergear
-
 **Branch pattern:** `develop`
 
 **Require a pull request before merging**
@@ -52,11 +35,6 @@
 
 ---
 
-## Release Branches
-# Reglas para: release/*
-# - Heredan reglas de develop
-# - Auto-deploy a staging en merge
-
 **Branch pattern:** `release/*`
 
 **Require a pull request before merging**
@@ -65,16 +43,12 @@
 
 ---
 
-## Comandos CLI para Configurar (GitHub API)
-
 ```bash
-# Configurar main branch
 gh api repos/{owner}/{repo}/branches/main/protection \
   -X PUT \
   -H "Accept: application/vnd.github+json" \
   --input branch-protection-main.json
 
-# Donde branch-protection-main.json contiene:
 {
   "required_status_checks": {
     "strict": true,
@@ -97,8 +71,6 @@ gh api repos/{owner}/{repo}/branches/main/protection \
 ```
 
 ---
-
-## Validación en Pipeline CI/CD
 
 El archivo `ci-cd.yml` ya implementa bloqueos similares mediante:
 - Jobs como `needs` dependencies

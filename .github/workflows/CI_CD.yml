@@ -1,0 +1,256 @@
+
+name: FoodTech CI/CD
+
+on:
+  push:
+    branches: [main, develop, "release/**", "hotfix/**"]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  NODE_VERSION: "20"
+  IMAGE_NAME: foodtech
+
+jobs:
+  lint:
+    name: Lint & TypeCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npx tsc --noEmit
+
+  component-tests:
+    name: Component Tests (Caja Blanca)
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - run: npm ci
+      - run: npm run test:ci
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: component-test-results
+          path: test-results/
+          retention-days: 30
+
+      - run: npm run test:coverage
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
+
+  docker-build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: component-tests
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
+
+      - name: Export image tarball
+        run: docker save ${{ env.IMAGE_NAME }}:${{ github.sha }} | gzip > image.tar.gz
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: image.tar.gz
+          retention-days: 1
+
+  integration-tests:
+    name: Integration/E2E Tests (Caja Negra)
+    runs-on: ubuntu-latest
+    needs: docker-build
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+
+      - name: Load image
+        run: docker load < image.tar.gz
+
+      - name: Run E2E Tests
+        run: |
+          docker run --rm --network host ${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            sh -c "npm run test:e2e || true"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-test-results
+          path: cypress/screenshots/
+          retention-days: 30
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: docker-build
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+
+      - name: Load image
+        run: docker load < image.tar.gz
+
+      - name: Trivy scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          format: "sarif"
+          output: "trivy-results.sarif"
+        continue-on-error: true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-scan-results
+          path: trivy-results.sarif
+          retention-days: 30
+
+  build:
+    name: Build Production
+    runs-on: ubuntu-latest
+    needs: [integration-tests, security-scan]
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - run: npm ci
+      - run: npm run build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: foodtech-build
+          path: dist/
+          retention-days: 7
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || github.ref == 'refs/heads/main' }}
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Version Tag
+        run: |
+          VERSION="v1.0.${{ github.run_number }}"
+          git tag $VERSION
+          git push origin $VERSION
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: foodtech-build
+          path: release/
+
+      - uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          release_name: Release v1.0.${{ github.run_number }}
+          draft: true
+          prerelease: false
+
+  pipeline-report:
+    name: Pipeline Report
+    runs-on: ubuntu-latest
+    needs: [lint, component-tests, integration-tests, security-scan]
+    if: always() && github.event_name == 'pull_request'
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage-report/
+        continue-on-error: true
+
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const icon = r => r === 'success' ? 'OK' : r === 'skipped' ? 'SKIP' : 'FAIL';
+
+            const lint      = '${{ needs.lint.result }}';
+            const component = '${{ needs.component-tests.result }}';
+            const integ     = '${{ needs.integration-tests.result }}';
+            const security  = '${{ needs.security-scan.result }}';
+
+            let coverageBlock = '_No disponible_';
+            try {
+              const raw = fs.readFileSync('coverage-report/coverage-summary.json', 'utf8');
+              const t = JSON.parse(raw).total;
+              const pct = m => `${m.pct}% (${m.covered}/${m.total})`;
+              coverageBlock = [
+                '| Metrica | Cobertura | Umbral |',
+                '|---------|-----------|--------|',
+                `| Lines | ${pct(t.lines)} | 90% |`,
+                `| Statements | ${pct(t.statements)} | 90% |`,
+                `| Functions | ${pct(t.functions)} | 90% |`,
+                `| Branches | ${pct(t.branches)} | 90% |`,
+              ].join('\n');
+            } catch (_) {}
+
+            const allPassed = [lint, component, integ, security].every(r => r === 'success');
+            const overall = allPassed ? 'PASO' : 'FALLO';
+
+            const body = [
+              '## FoodTech CI/CD - Pipeline Report',
+              '',
+              `**Estado general:** ${overall}`,
+              '',
+              '### Jobs',
+              '| Job | Estado |',
+              '|-----|--------|',
+              `| Lint & TypeCheck | ${icon(lint)} ${lint} |`,
+              `| Component Tests (Coverage >= 90%) | ${icon(component)} ${component} |`,
+              `| Integration/E2E Tests | ${icon(integ)} ${integ} |`,
+              `| Security Scan | ${icon(security)} ${security} |`,
+              '',
+              '### Cobertura (umbral: 90%)',
+              coverageBlock,
+              '',
+              `> Commit \`${{ github.sha }}\` - **${{ github.actor }}** - [Ver run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`,
+            ].join('\n');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });

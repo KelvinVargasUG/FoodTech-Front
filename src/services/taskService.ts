@@ -2,20 +2,12 @@ import { apiClient } from './apiClient';
 import type { Task } from '../models/Task';
 import { Station } from '../models/Task';
 
-/**
- * Servicio para manejar operaciones de tareas
- */
 class TaskService {
-  /**
-   * Obtiene tareas de una estación específica
-   */
+
   async getTasksByStation(station: Station): Promise<Task[]> {
     return apiClient.get<Task[]>(`/api/tasks/station/${station}`);
   }
 
-  /**
-   * Obtiene todas las tareas de todas las estaciones
-   */
   async getAllTasks(): Promise<Task[]> {
     const [barTasks, hotTasks, coldTasks] = await Promise.all([
       this.getTasksByStation(Station.BAR),
@@ -26,9 +18,6 @@ class TaskService {
     return [...barTasks, ...hotTasks, ...coldTasks];
   }
 
-  /**
-   * Inicia la preparación de una tarea
-   */
   async startTask(taskId: number): Promise<Task> {
     return apiClient.patch<Task>(`/api/tasks/${taskId}/start`);
   }

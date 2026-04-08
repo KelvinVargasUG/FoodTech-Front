@@ -25,7 +25,7 @@ describe('LoginView', () => {
 
   it('debe renderizar el formulario de login', () => {
     renderWithRouter(<LoginView />)
-    
+
     expect(screen.getByRole('button', { name: /Iniciar sesión/i })).toBeInTheDocument()
   })
 })

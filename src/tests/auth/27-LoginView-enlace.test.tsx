@@ -25,7 +25,7 @@ describe('LoginView', () => {
 
   it('debe mostrar el enlace para registrarse', () => {
     renderWithRouter(<LoginView />)
-    
+
     expect(screen.getByRole('button', { name: /Regístrate/i })).toBeInTheDocument()
   })
 })

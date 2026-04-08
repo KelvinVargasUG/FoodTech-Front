@@ -21,7 +21,7 @@ describe('useAuth', () => {
 
   it('debe hacer login exitosamente y crear sesión', async () => {
     const mockToken = 'jwt-token-abc123'
-    
+
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ token: mockToken })

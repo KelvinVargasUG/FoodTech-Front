@@ -1,6 +1,3 @@
-/**
- * Tipos de productos según las estaciones de cocina
- */
 export const ProductType = {
   DRINK: 'DRINK',
   HOT_DISH: 'HOT_DISH',
@@ -9,9 +6,6 @@ export const ProductType = {
 
 export type ProductType = (typeof ProductType)[keyof typeof ProductType];
 
-/**
- * Modelo de producto del menú
- */
 export interface Product {
   id: string;
   name: string;
@@ -21,12 +15,54 @@ export interface Product {
   price: number;
 }
 
-/**
- * Producto en el pedido con cantidad
- */
 export interface OrderProduct {
   name: string;
   type: ProductType;
   quantity: number;
   price: number;
+}
+
+export const ProductStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+} as const;
+
+export type ProductStatus = (typeof ProductStatus)[keyof typeof ProductStatus];
+
+export interface CatalogProduct {
+  id: string;
+  name: string;
+  description?: string;
+  type: ProductType;
+  category: string;
+  price: number;
+  status: ProductStatus;
+}
+
+export interface CreateProductRequest {
+  name: string;
+  type: ProductType;
+  category: string;
+  price: number;
+}
+
+export type CreateProductResponse = CatalogProduct;
+
+export interface UpdateProductRequest {
+  name: string;
+  description?: string;
+  type: ProductType;
+  category: string;
+  price: number;
+  status: ProductStatus;
+}
+
+export interface UpdateProductResponse {
+  id: string;
+  name: string;
+  description?: string;
+  type: ProductType;
+  category: string;
+  price: number;
+  status: ProductStatus;
 }

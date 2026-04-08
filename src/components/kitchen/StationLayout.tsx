@@ -10,16 +10,16 @@ interface StationLayoutProps {
 export function StationLayout({ stationName, stationCode, icon, children }: StationLayoutProps) {
   return (
     <div className="flex h-screen overflow-hidden bg-midnight">
-      {/* Sidebar */}
+      {}
       <aside className="w-24 bg-charcoal border-r border-white/5 flex flex-col items-center py-8 shrink-0">
         <div className="size-12 gold-gradient rounded-xl flex items-center justify-center text-midnight shadow-lg shadow-primary/10">
           <span className="material-symbols-outlined font-bold text-3xl">{icon}</span>
         </div>
       </aside>
 
-      {/* Main Content */}
+      {}
       <main className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
+        {}
         <header className="h-24 border-b border-white/5 px-10 flex items-center justify-between shrink-0 bg-charcoal">
           <div className="flex items-center gap-8">
             <div>

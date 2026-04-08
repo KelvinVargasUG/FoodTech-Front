@@ -25,10 +25,10 @@ describe('LoginView', () => {
 
   it('debe actualizar la contraseña al escribir', () => {
     renderWithRouter(<LoginView />)
-    
+
     const passwordInput = document.querySelector('input[id="password"]') as HTMLInputElement
     fireEvent.change(passwordInput, { target: { value: 'password123' } })
-    
+
     expect(passwordInput.value).toBe('password123')
   })
 })

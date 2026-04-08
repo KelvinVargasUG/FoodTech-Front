@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 describe('Logout E2E', () => {
   beforeEach(() => {
     cy.visit('/login');

@@ -95,8 +95,3 @@ execution:
   fail_on_error: true
   stop_on_lint_error: true
 
-# Flujo TDD resumido:
-# 1. Write Test → FAIL (red) ✗
-# 2. Implement Code → PASS (green) ✓
-# 3. Refactor → PASS (green) ✓
-# 4. Lint + Typecheck → ✓

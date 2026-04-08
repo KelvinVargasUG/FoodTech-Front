@@ -47,11 +47,7 @@ describe('CAJA BLANCA AVANZADA: useAuth - Escenarios Complejos con Mocks', () =>
     const { result } = renderHook(() => useAuth())
 
     await act(async () => {
-      try {
-        await result.current.login('test@restaurant.com', 'password123')
-      } catch {
-        // Error esperado
-      }
+      await result.current.login('test@restaurant.com', 'password123').catch(() => undefined)
     })
 
     expect(result.current.error).toBeTruthy()

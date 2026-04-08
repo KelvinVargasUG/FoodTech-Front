@@ -10,7 +10,7 @@ describe('authService', () => {
     const expiredDate = Date.now() - 1000
     localStorage.setItem('auth_token', 'expired-token')
     localStorage.setItem('auth_token_expiry', expiredDate.toString())
-    
+
     const { authService } = await import('../../services/authService')
     expect(authService.isAuthenticated()).toBe(false)
   })

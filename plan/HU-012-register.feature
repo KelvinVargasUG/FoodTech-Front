@@ -22,7 +22,6 @@ Feature: HU-012 Registro
     Then el formulario cambia a modo registro
     And puede completar el registro
 
-  # Extensiones planificadas (4-6 adicionales)
   Scenario: Registro con email inválido
     Given que el usuario quiere registrarse
     When el usuario ingresa un email con formato inválido

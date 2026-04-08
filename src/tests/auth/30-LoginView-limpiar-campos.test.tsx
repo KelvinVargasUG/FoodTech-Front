@@ -25,13 +25,13 @@ describe('LoginView', () => {
 
   it('debe limpiar campos al cambiar de modo', () => {
     renderWithRouter(<LoginView />)
-    
+
     const emailInput = document.querySelector('input[id="email"]') as HTMLInputElement
     fireEvent.change(emailInput, { target: { value: 'test@email.com' } })
-    
+
     const toggleButton = screen.getByRole('button', { name: /Regístrate/i })
     fireEvent.click(toggleButton)
-    
+
     expect(emailInput.value).toBe('')
   })
 })

@@ -2,21 +2,16 @@ import { useState, useEffect } from 'react';
 import { useTables } from '../hooks/useTables';
 import { useOrder } from '../hooks/useOrder';
 import { useKitchenTasks } from '../hooks/useKitchenTasks';
+import { useCatalog } from '../hooks/useCatalog';
 import { TableSelector } from '../components/waiter/TableSelector';
 import { CategoryFilter } from '../components/waiter/CategoryFilter';
 import { ProductGrid } from '../components/waiter/ProductGrid';
 import { OrderSummary } from '../components/waiter/OrderSummary';
 import { KitchenStatus } from '../components/waiter/KitchenStatus';
-import { ProductType } from '../models/Product';
-import { MENU_PRODUCTS } from '../helpers/menuData';
 import { calculateTotalPrice } from '../helpers/orderCalculator';
 
-/**
- * Vista principal del mesero
- * Orquesta todos los componentes y la lógica de negocio
- */
 export const WaiterView = () => {
-  // Estado de mesas
+
   const {
     tables,
     selectedTable,
@@ -26,7 +21,6 @@ export const WaiterView = () => {
     syncTablesWithTasks,
   } = useTables();
 
-  // Estado del pedido
   const {
     orderProducts,
     totalItems,
@@ -37,28 +31,24 @@ export const WaiterView = () => {
     submitOrder,
   } = useOrder();
 
-  // Estado de cocina
   const { tasks, isLoading, refreshTasks } = useKitchenTasks();
 
-  // Categoría seleccionada
-  const [selectedCategory, setSelectedCategory] = useState<
-    ProductType | 'ALL'
-  >('ALL');
+  const {
+    products: catalogProducts,
+    selectedCategory,
+    setSelectedCategory,
+    searchTerm,
+    setSearchTerm,
+    isLoading: isCatalogLoading,
+  } = useCatalog();
 
-  // Datos del cliente
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
 
-  /**
-   * Sincroniza el estado de las mesas con las tareas cada vez que cambian
-   */
   useEffect(() => {
     syncTablesWithTasks(tasks);
   }, [tasks, syncTablesWithTasks]);
 
-  /**
-   * Maneja el envío del pedido
-   */
   const handleSubmitOrder = async () => {
     if (!selectedTable) {
       alert('Por favor selecciona una mesa');
@@ -76,10 +66,9 @@ export const WaiterView = () => {
     const response = await submitOrder(selectedTable.number, customerName.trim(), customerEmail.trim());
 
     if (response) {
-      // Marcar mesa como ocupada
+
       markTableAsOccupied(selectedTable.id, response.orderId);
 
-      // Refrescar tareas
       await refreshTasks();
 
       alert(
@@ -97,16 +86,16 @@ export const WaiterView = () => {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Panel Izquierdo - Mesas */}
+      {}
       <TableSelector
         tables={tables}
         selectedTableId={selectedTableId}
         onSelectTable={selectTable}
       />
 
-      {/* Contenido Principal */}
+      {}
       <main className="flex-1 flex flex-col overflow-hidden bg-midnight">
-        {/* Header */}
+        {}
         <header className="h-24 border-b border-white/5 px-10 flex items-center justify-between shrink-0 bg-charcoal">
           <div className="flex items-center gap-8">
             <div>
@@ -137,27 +126,50 @@ export const WaiterView = () => {
           </div>
         </header>
 
-        {/* Contenido con scroll */}
+        {}
         <div className="flex-1 overflow-y-auto p-10 order-scroll">
-          {/* Categorías */}
+          {}
+          <div className="flex items-center gap-4 mb-6">
+            <div className="relative flex-1 max-w-md">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-silver-text text-xl">search</span>
+              <input
+                type="text"
+                placeholder="Buscar producto por nombre..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-charcoal border border-white/10 text-white-text placeholder-silver-text text-sm focus:outline-none focus:border-primary/50 transition-colors"
+              />
+            </div>
+          </div>
+
+          {}
           <CategoryFilter
             selectedCategory={selectedCategory}
             onSelectCategory={setSelectedCategory}
           />
 
-          {/* Grid de Productos */}
-          <ProductGrid
-            products={MENU_PRODUCTS}
-            selectedCategory={selectedCategory}
-            orderProductNames={orderProductNames}
-            onAddProduct={addProduct}
-          />
+          {}
+          {isCatalogLoading && (
+            <div className="flex items-center justify-center py-20">
+              <span className="material-symbols-outlined text-primary animate-spin text-4xl">progress_activity</span>
+            </div>
+          )}
+
+          {}
+          {!isCatalogLoading && (
+            <ProductGrid
+              products={catalogProducts}
+              selectedCategory="ALL"
+              orderProductNames={orderProductNames}
+              onAddProduct={addProduct}
+            />
+          )}
         </div>
       </main>
 
-      {/* Panel Derecho */}
+      {}
       <aside className="w-[420px] bg-charcoal border-l border-white/5 flex flex-col shrink-0">
-        {/* Resumen de Orden */}
+        {}
         <OrderSummary
           products={orderProducts}
           totalItems={totalItems}
@@ -171,7 +183,7 @@ export const WaiterView = () => {
           onSubmit={handleSubmitOrder}
         />
 
-        {/* Estado de Cocina */}
+        {}
         <KitchenStatus
           tasks={tasks}
           isLoading={isLoading}

@@ -25,13 +25,13 @@ describe('LoginView', () => {
 
   it('debe volver a modo login al hacer click en toggle desde registro', () => {
     renderWithRouter(<LoginView />)
-    
+
     const toggleToRegister = screen.getByRole('button', { name: /Regístrate/i })
     fireEvent.click(toggleToRegister)
-    
+
     const toggleToLogin = screen.getByRole('button', { name: /Iniciar sesión/i })
     fireEvent.click(toggleToLogin)
-    
+
     expect(screen.getByText('FoodTech Login')).toBeInTheDocument()
   })
 })

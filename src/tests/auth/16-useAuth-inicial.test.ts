@@ -14,7 +14,7 @@ describe('useAuth', () => {
 
   it('debe iniciar con isAuthenticated false cuando no hay token', () => {
     const { result } = renderHook(() => useAuth())
-    
+
     expect(result.current.isAuthenticated).toBe(false)
     expect(result.current.token).toBeNull()
     expect(result.current.isLoading).toBe(false)

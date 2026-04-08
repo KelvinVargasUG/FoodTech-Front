@@ -5,9 +5,6 @@ interface CategoryFilterProps {
   onSelectCategory: (category: ProductType | 'ALL') => void;
 }
 
-/**
- * Filtro de categorías de productos
- */
 export const CategoryFilter = ({
   selectedCategory,
   onSelectCategory,

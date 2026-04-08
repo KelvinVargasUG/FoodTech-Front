@@ -3,7 +3,6 @@ Feature: HU-010 Login
   Quiero iniciar sesión con mis credenciales
   Para acceder al sistema y gestionar pedidos
 
-  # Escenarios ya existentes (proporcionados):
   Scenario: Usuario inicia sesión con email y password correctos
     Given que el usuario tiene una cuenta registrada
     When el usuario ingresa email y password correctos
@@ -30,7 +29,6 @@ Feature: HU-010 Login
     Then el sistema permite acceso sin autenticación
     And crea una sesión de demo
 
-  # Escenarios extendidos (4-6 adicionales)
   Scenario: Login con formato de email inválido
     Given que el usuario quiere iniciar sesión
     When el usuario ingresa un email con formato inválido
@@ -54,21 +52,18 @@ Feature: HU-010 Login
     When el usuario introduce email/password con espacios en blanco
     Then el sistema debe limpiar los campos y autenticar correctamente si es válido
 
-  ## Escenario Automatizado: Login exitoso
   Given el usuario navega a la página de login
   When ingresa credenciales válidas (usuario demo, contraseña demo)
   And pulsa el botón de login
   Then accede al sistema y la sesión se persiste
   And se muestra la vista principal
 
-  ## Escenario Automatizado: Login inválido
   Given el usuario navega a la página de login
   When ingresa credenciales inválidas (usuario demo, contraseña incorrecta)
   And pulsa el botón de login
   Then se muestra un mensaje de error
   And no se accede al sistema
 
-  ## Vinculación Técnica
   - Script E2E: tests/e2e/login.spec.ts
   - Endpoint: /api/auth/login
   - Datos de prueba: usuario demo, contraseña demo

@@ -20,8 +20,9 @@ describe('authService', () => {
     })
 
     const { authService } = await import('../../services/authService')
-    const result = await authService.register('test@email.com', 'existinguser', 'password123')
 
-    expect(result).toBe(true)
+    await expect(
+      authService.register('test@email.com', 'existinguser', 'password123')
+    ).rejects.toThrow('Error: 400')
   })
 })

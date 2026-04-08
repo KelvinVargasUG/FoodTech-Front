@@ -7,9 +7,6 @@ interface TableSelectorProps {
   onSelectTable: (tableId: string) => void;
 }
 
-/**
- * Panel lateral con selector de mesas
- */
 export const TableSelector = ({
   tables,
   selectedTableId,
@@ -17,7 +14,7 @@ export const TableSelector = ({
 }: TableSelectorProps) => {
   return (
     <aside className="w-72 bg-charcoal border-r border-white/5 flex flex-col shrink-0">
-      {/* Header */}
+      {}
       <div className="p-8 flex items-center gap-3">
         <div className="size-10 gold-gradient rounded-lg flex items-center justify-center text-midnight shadow-lg shadow-primary/10">
           <span className="material-symbols-outlined font-bold">
@@ -34,7 +31,7 @@ export const TableSelector = ({
         </div>
       </div>
 
-      {/* Active Zone */}
+      {}
       <div className="mt-4 px-4 flex-1">
         <p className="text-[11px] uppercase tracking-widest text-silver-text px-3 mb-4">
           Zona Activa

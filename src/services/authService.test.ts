@@ -16,7 +16,7 @@ describe('authService', () => {
   describe('login', () => {
     it('debe hacer login exitoso y guardar token en localStorage', async () => {
       const mockToken = 'fake-jwt-token-12345'
-      
+
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ token: mockToken })
@@ -54,7 +54,7 @@ describe('authService', () => {
 
     it('debe guardar token sin expiración cuando rememberMe es false', async () => {
       const mockToken = 'fake-jwt-token-12345'
-      
+
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ token: mockToken })
@@ -69,7 +69,7 @@ describe('authService', () => {
 
     it('debe guardar token con expiración cuando rememberMe es true', async () => {
       const mockToken = 'fake-jwt-token-remember'
-      
+
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ token: mockToken })
@@ -86,10 +86,10 @@ describe('authService', () => {
   describe('logout', () => {
     it('debe remover token de localStorage', async () => {
       localStorage.setItem('auth_token', 'some-token')
-      
+
       const { authService } = await import('./authService')
       authService.logout()
-      
+
       expect(localStorage.getItem('auth_token')).toBeNull()
     })
   })
@@ -97,7 +97,7 @@ describe('authService', () => {
   describe('getToken', () => {
     it('debe retornar el token guardado', async () => {
       localStorage.setItem('auth_token', 'my-token')
-      
+
       const { authService } = await import('./authService')
       expect(authService.getToken()).toBe('my-token')
     })
@@ -111,7 +111,7 @@ describe('authService', () => {
   describe('isAuthenticated', () => {
     it('debe retornar true cuando hay token válido', async () => {
       localStorage.setItem('auth_token', 'valid-token')
-      
+
       const { authService } = await import('./authService')
       expect(authService.isAuthenticated()).toBe(true)
     })
@@ -125,7 +125,7 @@ describe('authService', () => {
       const expiredDate = Date.now() - 1000
       localStorage.setItem('auth_token', 'expired-token')
       localStorage.setItem('auth_token_expiry', expiredDate.toString())
-      
+
       const { authService } = await import('./authService')
       expect(authService.isAuthenticated()).toBe(false)
     })
@@ -144,16 +144,17 @@ describe('authService', () => {
       expect(result).toBe(true)
     })
 
-    it('debe retornar true aunque el servidor devuelva error 400 (comportamiento actual)', async () => {
+    it('debe lanzar error cuando el servidor devuelve error 400', async () => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: false,
         status: 400
       })
 
       const { authService } = await import('./authService')
-      const result = await authService.register('test@email.com', 'existinguser', 'password123')
 
-      expect(result).toBe(true)
+      await expect(
+        authService.register('test@email.com', 'existinguser', 'password123')
+      ).rejects.toThrow('Error: 400')
     })
 
     it('debe lanzar error cuando hay error de red', async () => {

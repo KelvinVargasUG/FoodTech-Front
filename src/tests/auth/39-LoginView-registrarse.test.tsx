@@ -25,10 +25,10 @@ describe('LoginView', () => {
 
   it('debe mostrar Registrarse en modo registro', () => {
     renderWithRouter(<LoginView />)
-    
+
     const toggleButton = screen.getByRole('button', { name: /Regístrate/i })
     fireEvent.click(toggleButton)
-    
+
     expect(screen.getByText('Registrarse')).toBeInTheDocument()
   })
 })

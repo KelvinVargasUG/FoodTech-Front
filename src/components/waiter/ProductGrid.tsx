@@ -9,9 +9,6 @@ interface ProductGridProps {
   onAddProduct: (product: Product) => void;
 }
 
-/**
- * Grid de productos del menú
- */
 export const ProductGrid = ({
   products,
   selectedCategory,
@@ -22,6 +19,19 @@ export const ProductGrid = ({
     selectedCategory === 'ALL'
       ? products
       : products.filter((p) => p.type === selectedCategory);
+
+  if (filteredProducts.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-4">
+        <span className="material-symbols-outlined text-silver-text text-5xl">
+          menu_book
+        </span>
+        <p className="text-silver-text text-center">
+          No hay productos disponibles en esta categoría
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">

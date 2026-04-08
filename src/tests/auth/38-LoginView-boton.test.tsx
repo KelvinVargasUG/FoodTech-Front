@@ -25,7 +25,7 @@ describe('LoginView', () => {
 
   it('debe mostrar Iniciar sesión cuando no está cargando', () => {
     renderWithRouter(<LoginView />)
-    
+
     expect(screen.getByText('Iniciar sesión')).toBeInTheDocument()
   })
 })

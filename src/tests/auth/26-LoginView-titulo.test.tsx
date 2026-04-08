@@ -25,7 +25,7 @@ describe('LoginView', () => {
 
   it('debe mostrar el título de FoodTech Login', () => {
     renderWithRouter(<LoginView />)
-    
+
     expect(screen.getByText('FoodTech Login')).toBeInTheDocument()
   })
 })

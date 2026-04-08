@@ -12,7 +12,6 @@ export function useStationTasks(station: Station, pollingInterval = 5000) {
   const [error, setError] = useState<string | null>(null);
   const [startingTaskId, setStartingTaskId] = useState<number | null>(null);
 
-  // Obtener tareas de la estación
   const fetchTasks = useCallback(async () => {
     try {
       setError(null);
@@ -26,7 +25,6 @@ export function useStationTasks(station: Station, pollingInterval = 5000) {
     }
   }, [station]);
 
-  // Filtrar tareas según estado seleccionado
   useEffect(() => {
     if (selectedStatus === 'ALL') {
       setFilteredTasks(tasks);
@@ -35,20 +33,18 @@ export function useStationTasks(station: Station, pollingInterval = 5000) {
     }
   }, [tasks, selectedStatus]);
 
-  // Polling automático
   useEffect(() => {
     fetchTasks();
     const intervalId = setInterval(fetchTasks, pollingInterval);
     return () => clearInterval(intervalId);
   }, [fetchTasks, pollingInterval]);
 
-  // Iniciar preparación de tarea
   const startTaskPreparation = async (taskId: number) => {
     try {
       setStartingTaskId(taskId);
       setError(null);
       await taskService.startTask(taskId);
-      await fetchTasks(); // Refrescar inmediatamente
+      await fetchTasks(); 
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al iniciar preparación');
       console.error('Error starting task:', err);
@@ -57,7 +53,6 @@ export function useStationTasks(station: Station, pollingInterval = 5000) {
     }
   };
 
-  // Calcular contadores por estado
   const taskCounts = {
     all: tasks.length,
     pending: tasks.filter(t => t.status === TaskStatus.PENDING).length,
