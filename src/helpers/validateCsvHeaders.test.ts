@@ -6,7 +6,6 @@ type ParseOptions = {
   error?: (error: { message: string }) => void;
 };
 
-// Mock papaparse
 vi.mock('papaparse', () => ({
   default: {
     parse: vi.fn(),

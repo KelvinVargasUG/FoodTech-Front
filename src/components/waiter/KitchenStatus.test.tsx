@@ -180,7 +180,7 @@ describe('KitchenStatus', () => {
   });
 
   it('shows "Cargando..." before order status is fetched', () => {
-    // Never resolve the order status promise
+    
     mockOrderService.getOrderStatus.mockReturnValue(new Promise(() => {}));
 
     const tasks = [
@@ -201,7 +201,7 @@ describe('KitchenStatus', () => {
 
     render(<KitchenStatus tasks={tasks} isLoading={false} onRefresh={vi.fn()} />);
 
-    // After error, orderStatuses map stays empty ⇒ shows "Cargando..."
+    
     await waitFor(() => {
       expect(screen.getByTestId('kitchen-order-1')).toBeInTheDocument();
     });

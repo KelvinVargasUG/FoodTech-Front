@@ -92,17 +92,17 @@ describe('useTables', () => {
       result.current.syncTablesWithTasks(tasks);
     });
 
-    // A1 should be occupied (PENDING task)
+    
     const a1 = result.current.tables.find((t) => t.number === 'A1');
     expect(a1?.status).toBe(TableStatus.OCUPADA);
     expect(a1?.activeOrderId).toBe(100);
 
-    // B2 should be occupied (IN_PREPARATION task)
+    
     const b2 = result.current.tables.find((t) => t.number === 'B2');
     expect(b2?.status).toBe(TableStatus.OCUPADA);
     expect(b2?.activeOrderId).toBe(101);
 
-    // A3 should be available (COMPLETED task)
+    
     const a3 = result.current.tables.find((t) => t.number === 'A3');
     expect(a3?.status).toBe(TableStatus.DISPONIBLE);
     expect(a3?.activeOrderId).toBeUndefined();

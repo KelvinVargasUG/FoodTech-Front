@@ -100,7 +100,7 @@ describe('CreateProductForm', () => {
   it('clears field-specific validation error on change', async () => {
     render(<CreateProductForm />);
 
-    // Submit empty to trigger validation
+    
     const form = screen.getByTestId('create-product-button').closest('form')!;
     fireEvent.submit(form);
     
@@ -108,10 +108,10 @@ describe('CreateProductForm', () => {
       expect(screen.getAllByTestId('form-validation-error').length).toBeGreaterThan(0);
     });
 
-    // Type in name field to clear its error
+    
     await userEvent.type(screen.getByLabelText('Nombre'), 'Pizza');
 
-    // The name error should be cleared, but other errors remain
+    
     const remaining = screen.getAllByTestId('form-validation-error');
     expect(remaining.length).toBeGreaterThanOrEqual(1);
   });

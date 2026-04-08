@@ -77,8 +77,8 @@ describe('useAuth', () => {
     })
 
     it('debe mostrar error vacío cuando err es falsy (null/undefined)', async () => {
-      // authService always re-throws Error objects, so we need to mock authService
-      // to reject with a falsy value to cover the `err ? ... : ""` branch
+      
+      
       const { authService: svc } = await import('../services/authService');
       vi.spyOn(svc, 'login').mockRejectedValueOnce(null);
 

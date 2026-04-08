@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-// Mock authService before importing apiClient
 vi.mock('./authService', () => ({
   authService: {
     getToken: vi.fn(),

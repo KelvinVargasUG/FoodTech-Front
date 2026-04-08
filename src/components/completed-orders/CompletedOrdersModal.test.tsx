@@ -88,9 +88,9 @@ describe('CompletedOrdersModal', () => {
       <CompletedOrdersModal isOpen={true} onClose={vi.fn()} orders={mockOrders} onInvoice={onInvoice} />
     );
     fireEvent.click(screen.getByTestId('invoice-btn-0'));
-    // The invoice button triggers the onInvoice with the numeric orderId
+    
     await vi.waitFor(() => {
-      expect(onInvoice).toHaveBeenCalledWith(2); // sorted by completedAt desc so first is order 2
+      expect(onInvoice).toHaveBeenCalledWith(2); 
     });
   });
 
@@ -104,7 +104,7 @@ describe('CompletedOrdersModal', () => {
         invoiceLoadingById={{ '2': true }}
       />
     );
-    // Sorted by date desc, first order is id=2
+    
     expect(screen.getByTestId('invoice-btn-0')).toHaveTextContent('Enviando...');
   });
 
@@ -125,9 +125,9 @@ describe('CompletedOrdersModal', () => {
     render(
       <CompletedOrdersModal isOpen={true} onClose={vi.fn()} orders={mockOrders} onInvoice={vi.fn()} />
     );
-    // Tab and Shift+Tab cycle through focusable elements
+    
     fireEvent.keyDown(document, { key: 'Tab', shiftKey: false });
     fireEvent.keyDown(document, { key: 'Tab', shiftKey: true });
-    // No errors thrown = focus trap works
+    
   });
 });

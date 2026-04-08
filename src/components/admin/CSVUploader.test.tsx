@@ -106,7 +106,7 @@ describe('CSVUploader', () => {
     const dropZone = screen.getByTestId('csv-drop-zone');
     const dragOverEvent = new Event('dragover', { bubbles: true, cancelable: true });
     dropZone.dispatchEvent(dragOverEvent);
-    // dragOver handler calls e.preventDefault(); we just ensure the handler runs
+    
     expect(dropZone).toBeDefined();
   });
 
@@ -116,9 +116,9 @@ describe('CSVUploader', () => {
     );
 
     const dropZone = screen.getByTestId('csv-drop-zone');
-    // Simulate Enter keydown → should trigger inputRef.current.click()
+    
     fireEvent.keyDown(dropZone, { key: 'Enter' });
-    // No assertion error means the handler ran without crashing
+    
     expect(dropZone).toBeDefined();
   });
 
@@ -140,7 +140,7 @@ describe('CSVUploader', () => {
     const dropZone = screen.getByTestId('csv-drop-zone');
     fireEvent.keyDown(dropZone, { key: 'Enter' });
     fireEvent.keyDown(dropZone, { key: ' ' });
-    // Should not crash; disabled guard prevents inputRef click
+    
     expect(dropZone).toBeDefined();
   });
 
@@ -162,12 +162,12 @@ describe('CSVUploader', () => {
 
     const input = screen.getByTestId('csv-file-input') as HTMLInputElement;
 
-    // First: oversized file
+    
     const oversized = new File(['A'.repeat(11 * 1024 * 1024)], 'big.csv', { type: 'text/csv' });
     fireEvent.change(input, { target: { files: [oversized] } });
     expect(screen.getByTestId('upload-size-error')).toBeDefined();
 
-    // Then: valid file
+    
     const valid = new File(['a,b\n'], 'ok.csv', { type: 'text/csv' });
     fireEvent.change(input, { target: { files: [valid] } });
     expect(screen.queryByTestId('upload-size-error')).toBeNull();

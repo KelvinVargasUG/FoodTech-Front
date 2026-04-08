@@ -7,7 +7,6 @@ import type { CatalogProduct } from '../models/Product';
 import type { KitchenTask } from '../models/Task';
 import { Station, TaskStatus } from '../models/Task';
 
-// Mock all hooks
 const mockSelectTable = vi.fn();
 const mockMarkTableAsOccupied = vi.fn();
 const mockSyncTablesWithTasks = vi.fn();
@@ -31,7 +30,6 @@ vi.mock('../hooks/useCatalog', () => ({
   useCatalog: vi.fn(),
 }));
 
-// Mock child components to simplify
 vi.mock('../components/waiter/TableSelector', () => ({
   TableSelector: ({ tables, selectedTableId, onSelectTable }: { tables: Table[]; selectedTableId: string | null; onSelectTable: (id: string) => void }) => (
     <div data-testid="table-selector">
@@ -190,8 +188,8 @@ describe('WaiterView', () => {
       },
     });
     render(<WaiterView />);
-    // The header shows "Mesa 1" and the TableSelector mock also renders "Mesa 1"
-    // so we check for the header specifically
+    
+    
     expect(screen.getByText('Agrega productos al pedido')).toBeInTheDocument();
   });
 

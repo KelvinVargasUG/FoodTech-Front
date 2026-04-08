@@ -78,12 +78,12 @@ describe('useCompletedOrders', () => {
 
     const firstOrders = result.current.completedOrders;
 
-    // Trigger another refresh (same data, same signature)
+    
     await act(async () => {
       await result.current.refresh();
     });
 
-    // Should be the same reference since signature didn't change
+    
     expect(result.current.completedOrders).toBe(firstOrders);
   });
 
@@ -116,7 +116,7 @@ describe('useCompletedOrders', () => {
       await vi.advanceTimersByTimeAsync(0);
     });
 
-    // After invoice, get returns remaining orders
+    
     mockApi.get.mockResolvedValue([mockOrdersResponse[1]]);
 
     let remainingCount: number | undefined;

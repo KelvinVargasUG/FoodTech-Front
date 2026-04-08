@@ -254,7 +254,7 @@ describe('useBulkUpload', () => {
     const blob = new Blob(['err1\nerr2'], { type: 'text/csv' });
     vi.mocked(svc.downloadErrors).mockResolvedValueOnce(blob);
 
-    // Setup upload to set lastUploadIdRef
+    
     const session = { uploadId: 'uid-dl', status: 'UPLOADING' };
     const summary = {
       uploadId: 'uid-dl', uploadStatus: 'UPLOADED', processingStatus: 'COMPLETED',
@@ -298,7 +298,7 @@ describe('useBulkUpload', () => {
   it('downloadErrors sets error when service throws', async () => {
     const svc = await getService();
 
-    // Setup upload first to set lastUploadIdRef
+    
     const session = { uploadId: 'uid-dlerr', status: 'UPLOADING' };
     const summary = {
       uploadId: 'uid-dlerr', uploadStatus: 'UPLOADED', processingStatus: 'COMPLETED',
@@ -314,7 +314,7 @@ describe('useBulkUpload', () => {
       await result.current.upload(buildCsvFile());
     });
 
-    // Now set the downloadErrors mock to reject AFTER upload completes
+    
     vi.mocked(svc.downloadErrors).mockRejectedValueOnce(new Error('Download fail'));
 
     await act(async () => {
