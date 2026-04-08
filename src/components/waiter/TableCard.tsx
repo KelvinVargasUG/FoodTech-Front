@@ -7,9 +7,6 @@ interface TableCardProps {
   onSelect: (tableId: string) => void;
 }
 
-/**
- * Tarjeta de mesa individual
- */
 export const TableCard = ({ table, isSelected, onSelect }: TableCardProps) => {
   const isOccupied = table.status === TableStatus.OCUPADA;
 

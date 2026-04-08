@@ -3,17 +3,11 @@ import type { OrderProduct, Product } from '../models/Product';
 import { orderService } from '../services/orderService';
 import type { CreateOrderRequest, CreateOrderResponse } from '../models/Order';
 
-/**
- * Hook para gestionar el pedido actual
- */
 export const useOrder = () => {
   const [orderProducts, setOrderProducts] = useState<OrderProduct[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  /**
-   * Agrega un producto al pedido
-   */
   const addProduct = useCallback((product: Product) => {
     setOrderProducts((prev) => {
       const existingIndex = prev.findIndex(
@@ -21,7 +15,7 @@ export const useOrder = () => {
       );
 
       if (existingIndex >= 0) {
-        // Si ya existe, incrementar cantidad
+
         const updated = [...prev];
         updated[existingIndex] = {
           ...updated[existingIndex],
@@ -30,7 +24,6 @@ export const useOrder = () => {
         return updated;
       }
 
-      // Si no existe, agregar nuevo
       return [
         ...prev,
         {
@@ -43,9 +36,6 @@ export const useOrder = () => {
     });
   }, []);
 
-  /**
-   * Elimina un producto del pedido
-   */
   const removeProduct = useCallback((productName: string) => {
     setOrderProducts((prev) => {
       const existingIndex = prev.findIndex((p) => p.name === productName);
@@ -54,7 +44,7 @@ export const useOrder = () => {
 
       const updated = [...prev];
       if (updated[existingIndex].quantity > 1) {
-        // Decrementar cantidad
+
         updated[existingIndex] = {
           ...updated[existingIndex],
           quantity: updated[existingIndex].quantity - 1,
@@ -62,22 +52,15 @@ export const useOrder = () => {
         return updated;
       }
 
-      // Eliminar si cantidad es 1
       return prev.filter((p) => p.name !== productName);
     });
   }, []);
 
-  /**
-   * Limpia el pedido
-   */
   const clearOrder = useCallback(() => {
     setOrderProducts([]);
     setError(null);
   }, []);
 
-  /**
-   * Envía el pedido al backend
-   */
   const submitOrder = useCallback(
     async (tableNumber: string, customerName: string, customerEmail: string): Promise<CreateOrderResponse | null> => {
       if (orderProducts.length === 0) {
@@ -89,7 +72,7 @@ export const useOrder = () => {
       setError(null);
 
       try {
-        // Convertir a formato del backend
+
         const request: CreateOrderRequest = {
           tableNumber,
           customerName,

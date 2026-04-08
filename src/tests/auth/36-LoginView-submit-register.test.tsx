@@ -28,22 +28,22 @@ describe('LoginView', () => {
 
   it('debe llamar register al hacer submit en modo registro', async () => {
     renderWithRouter(<LoginView />)
-    
+
     const toggleButton = screen.getByRole('button', { name: /Regístrate/i })
     fireEvent.click(toggleButton)
-    
+
     const emailInput = document.querySelector('input[id="email"]') as HTMLInputElement
     fireEvent.change(emailInput, { target: { value: 'test@email.com' } })
-    
+
     const usernameInput = document.querySelector('input[id="username"]') as HTMLInputElement
     fireEvent.change(usernameInput, { target: { value: 'testuser' } })
-    
+
     const passwordInput = document.querySelector('input[id="password"]') as HTMLInputElement
     fireEvent.change(passwordInput, { target: { value: 'password123' } })
-    
+
     const form = document.querySelector('form') as HTMLFormElement
     fireEvent.submit(form)
-    
+
     await waitFor(() => {
       expect(mockRegister).toHaveBeenCalledWith('test@email.com', 'testuser', 'password123')
     })

@@ -70,9 +70,16 @@ jobs:
           path: test-results/
           retention-days: 30
 
-      - name: 📈 Coverage Report
+      - name: 📈 Coverage Report (≥ 90%)
         run: npm run test:coverage
-        continue-on-error: true
+
+      - name: 📤 Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
 
   # ==========================================
   # JOB 3: INTEGRATION TESTS (Caja Negra)
@@ -211,3 +218,77 @@ jobs:
           release_name: Release v1.0.${{ github.run_number }}
           draft: true
           prerelease: false
+
+  # ==========================================
+  # JOB 7: PIPELINE REPORT (PR Comment)
+  # ==========================================
+  pipeline-report:
+    name: 📊 Pipeline Report
+    runs-on: ubuntu-latest
+    needs: [lint, component-tests, integration-tests, security-scan]
+    if: always() && github.event_name == 'pull_request'
+    permissions:
+      pull-requests: write
+    steps:
+      - name: 📥 Download Coverage Report
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage-report/
+        continue-on-error: true
+
+      - name: 📝 Post Pipeline Summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const icon = r => r === 'success' ? '✅' : r === 'skipped' ? '⏭️' : '❌';
+
+            const lint      = '${{ needs.lint.result }}';
+            const component = '${{ needs.component-tests.result }}';
+            const integ     = '${{ needs.integration-tests.result }}';
+            const security  = '${{ needs.security-scan.result }}';
+
+            let coverageBlock = '_No disponible_';
+            try {
+              const raw = fs.readFileSync('coverage-report/coverage-summary.json', 'utf8');
+              const t = JSON.parse(raw).total;
+              const pct = m => `${m.pct}% (${m.covered}/${m.total})`;
+              coverageBlock = [
+                '| Métrica | Cobertura | Umbral |',
+                '|---------|-----------|--------|',
+                `| Lines | ${pct(t.lines)} | 90% |`,
+                `| Statements | ${pct(t.statements)} | 90% |`,
+                `| Functions | ${pct(t.functions)} | 90% |`,
+                `| Branches | ${pct(t.branches)} | 90% |`,
+              ].join('\n');
+            } catch (_) {}
+
+            const allPassed = [lint, component, integ, security].every(r => r === 'success');
+            const overall = allPassed ? '✅ PASÓ' : '❌ FALLÓ';
+
+            const body = [
+              '## 🚀 FoodTech CI/CD — Pipeline Report',
+              '',
+              `**Estado general:** ${overall}`,
+              '',
+              '### Jobs',
+              '| Job | Estado |',
+              '|-----|--------|',
+              `| 🧹 Lint & TypeCheck | ${icon(lint)} ${lint} |`,
+              `| 🧪 Component Tests (Coverage ≥ 90%) | ${icon(component)} ${component} |`,
+              `| 🔗 Integration/E2E Tests | ${icon(integ)} ${integ} |`,
+              `| 🔒 Security Scan | ${icon(security)} ${security} |`,
+              '',
+              '### 📈 Cobertura (umbral: 90%)',
+              coverageBlock,
+              '',
+              `> Commit \`${{ github.sha }}\` · **${{ github.actor }}** · [Ver run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`,
+            ].join('\n');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });

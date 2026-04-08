@@ -25,10 +25,10 @@ describe('LoginView', () => {
 
   it('debe actualizar el email al escribir', () => {
     renderWithRouter(<LoginView />)
-    
+
     const emailInput = document.querySelector('input[id="email"]') as HTMLInputElement
     fireEvent.change(emailInput, { target: { value: 'test@email.com' } })
-    
+
     expect(emailInput.value).toBe('test@email.com')
   })
 })

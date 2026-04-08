@@ -15,7 +15,6 @@ Feature: HU-011 Logout
     Then el sistema cierra sesión automáticamente
     And redirige a la página de login
 
-  # Extensiones planificadas
   Scenario: Logout desde múltiples pestañas
     Given que el usuario está autenticado
     When el usuario cierra la pestaña activa y mantiene otra

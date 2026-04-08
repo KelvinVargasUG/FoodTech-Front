@@ -2,17 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import type { Task } from '../models/Task';
 import { taskService } from '../services/taskService';
 
-/**
- * Hook para gestionar el estado de tareas en cocina
- */
 export const useKitchenTasks = (refreshInterval = 5000) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  /**
-   * Obtiene todas las tareas
-   */
   const fetchTasks = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -29,9 +23,6 @@ export const useKitchenTasks = (refreshInterval = 5000) => {
     }
   }, []);
 
-  /**
-   * Refresco automático de tareas
-   */
   useEffect(() => {
     fetchTasks();
     const interval = setInterval(fetchTasks, refreshInterval);

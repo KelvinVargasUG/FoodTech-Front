@@ -14,9 +14,9 @@ describe('useAuth', () => {
 
   it('debe iniciar con isAuthenticated true cuando hay token', () => {
     localStorage.setItem('auth_token', 'existing-token')
-    
+
     const { result } = renderHook(() => useAuth())
-    
+
     expect(result.current.isAuthenticated).toBe(true)
     expect(result.current.token).toBe('existing-token')
   })

@@ -17,7 +17,7 @@ describe('VALIDACION: Reglas de Negocio - Auth', () => {
     const expiredDate = Date.now() - 1000
     localStorage.setItem('auth_token', 'expired-token')
     localStorage.setItem('auth_token_expiry', expiredDate.toString())
-    
+
     const { authService } = await import('../../services/authService')
     expect(authService.isAuthenticated()).toBe(false)
   })
@@ -25,10 +25,10 @@ describe('VALIDACION: Reglas de Negocio - Auth', () => {
   it('VALIDAR: Logout limpia token', async () => {
     localStorage.setItem('auth_token', 'some-token')
     localStorage.setItem('auth_token_expiry', '123456')
-    
+
     const { authService } = await import('../../services/authService')
     authService.logout()
-    
+
     expect(localStorage.getItem('auth_token')).toBeNull()
   })
 

@@ -15,7 +15,7 @@ describe('authService', () => {
 
   it('debe guardar token con expiración cuando rememberMe es true', async () => {
     const mockToken = 'fake-jwt-token-remember'
-    
+
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ token: mockToken })

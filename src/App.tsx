@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { WaiterView } from './views/WaiterView';
+import { AdminView } from './views/AdminView';
+import { BulkUploadView } from './views/BulkUploadView';
 import { HotKitchenView } from './views/HotKitchenView';
 import { BarView } from './views/BarView';
 import { ColdKitchenView } from './views/ColdKitchenView';
@@ -13,7 +15,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginView />} />
-        
+
         <Route
           path="/*"
           element={
@@ -26,6 +28,8 @@ function App() {
                   <Route path="/cocina-caliente" element={<HotKitchenView />} />
                   <Route path="/barra" element={<BarView />} />
                   <Route path="/cocina-fria" element={<ColdKitchenView />} />
+                  <Route path="/admin" element={<AdminView />} />
+                  <Route path="/admin/carga-masiva" element={<BulkUploadView />} />
                 </Routes>
               </div>
               <CompletedOrdersWidget />

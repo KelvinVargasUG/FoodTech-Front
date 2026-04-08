@@ -2,7 +2,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080
 const REMEMBER_ME_DAYS = 30
 export const authService = {
   async login(email: string, password: string, rememberMe: boolean = false): Promise<boolean> {
-    
+
     try {
       const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
@@ -20,7 +20,7 @@ export const authService = {
       }
 
       const data = await response.json()
-      
+
       if (rememberMe) {
         const expiryDate = Date.now() + (REMEMBER_ME_DAYS * 24 * 60 * 60 * 1000)
         localStorage.setItem('auth_token', data.token)
@@ -71,12 +71,10 @@ export const authService = {
 
       if (!response.ok) {
         let message = `Error: ${response.status}`;
-        try {
-          const data = await response.json();
-          if (data && (data.message || data.error)) {
-            message = data.message || data.error;
-          }
-        } catch {}
+        const data = await Promise.resolve().then(() => response.json()).catch(() => null);
+        if (data && (data.message || data.error)) {
+          message = data.message || data.error;
+        }
         throw new Error(message);
       }
       return true;
@@ -90,5 +88,5 @@ export const authService = {
       throw new Error('Error desconocido');
     }
   },
-  
+
 }

@@ -32,7 +32,7 @@ export const LoginView = () => {
       await register(email, username, password)
     } else {
       await login(email, password, rememberMe)
-      
+
     }
   }
 
@@ -46,10 +46,10 @@ export const LoginView = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-midnight">
-      
+
       <div className="w-full max-w-md bg-charcoal border border-white/5 rounded-2xl p-10 shadow-2xl">
-        
-        {/* Title */}
+
+        {}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white-text">
             {isRegisterMode ? 'FoodTech Registro' : 'FoodTech Login'}
@@ -61,7 +61,7 @@ export const LoginView = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* Email (login y registro) */}
+          {}
           <div>
             <label className="block text-sm text-silver-text mb-2">
               {!isRegisterMode ? "Email / Username" : "Email" } 
@@ -79,7 +79,7 @@ export const LoginView = () => {
             />
           </div>
 
-          {/* Username (solo registro) */}
+          {}
           {isRegisterMode && (
             <div>
               <label className="block text-sm text-silver-text mb-2">
@@ -100,7 +100,7 @@ export const LoginView = () => {
             </div>
           )}
 
-          {/* Password */}
+          {}
           <div>
             <label className="block text-sm text-silver-text mb-2">
               Contraseña
@@ -119,14 +119,14 @@ export const LoginView = () => {
             />
           </div>
 
-          {/* Error */}
+          {}
           {error && (
             <div className="text-red-400 text-sm text-center" data-testid="error-message">
               {error}
             </div>
           )}
 
-          {/* Remember me (solo login, no demo) */}
+          {}
           {!isRegisterMode && !demoMode && (
             <div className="flex items-center gap-3">
               <input
@@ -142,7 +142,7 @@ export const LoginView = () => {
             </div>
           )}
 
-          {/* Demo mode */}
+          {}
           <div className="flex items-center gap-3">
             <input
               type="checkbox"
@@ -159,7 +159,7 @@ export const LoginView = () => {
             </label>
           </div>
 
-          {/* Button */}
+          {}
           <button
             type="submit"
             data-testid="login-button"
@@ -173,7 +173,7 @@ export const LoginView = () => {
               : (isRegisterMode ? 'Registrarse' : 'Iniciar sesión')}
           </button>
 
-          {/* Toggle Login/Register */}
+          {}
           <div className="text-center">
             <button
               type="button"

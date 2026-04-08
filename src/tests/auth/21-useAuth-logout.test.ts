@@ -14,9 +14,9 @@ describe('useAuth', () => {
 
   it('debe hacer logout correctamente Y limpiar sesión', () => {
     localStorage.setItem('auth_token', 'token-to-remove')
-    
+
     const { result } = renderHook(() => useAuth())
-    
+
     act(() => {
       result.current.logout()
     })

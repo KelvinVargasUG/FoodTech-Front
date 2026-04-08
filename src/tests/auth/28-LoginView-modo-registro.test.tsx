@@ -25,10 +25,10 @@ describe('LoginView', () => {
 
   it('debe cambiar a modo registro al hacer click en el toggle', () => {
     renderWithRouter(<LoginView />)
-    
+
     const toggleButton = screen.getByRole('button', { name: /Regístrate/i })
     fireEvent.click(toggleButton)
-    
+
     expect(screen.getByText('FoodTech Registro')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Registrarse/i })).toBeInTheDocument()
   })

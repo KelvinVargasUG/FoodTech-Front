@@ -22,14 +22,14 @@ export function HotKitchenView() {
       stationCode="HOT_KITCHEN • Platos Principales"
       icon="local_fire_department"
     >
-      {/* Filtros */}
+      {}
       <TaskStatusFilter
         selectedStatus={selectedStatus}
         onStatusChange={setSelectedStatus}
         taskCounts={taskCounts}
       />
 
-      {/* Contenido */}
+      {}
       <div className="flex-1 overflow-y-auto p-10 order-scroll">
         {error && (
           <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6">

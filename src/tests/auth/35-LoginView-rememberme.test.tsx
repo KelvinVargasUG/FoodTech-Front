@@ -28,16 +28,16 @@ describe('LoginView', () => {
 
   it('debe llamar login con rememberMe al hacer submit con checkbox marcado', async () => {
     renderWithRouter(<LoginView />)
-    
+
     const rememberMeCheckbox = document.querySelector('input[id="rememberMe"]') as HTMLInputElement
     fireEvent.click(rememberMeCheckbox)
-    
+
     const passwordInput = document.querySelector('input[id="password"]') as HTMLInputElement
     fireEvent.change(passwordInput, { target: { value: 'password123' } })
-    
+
     const form = document.querySelector('form') as HTMLFormElement
     fireEvent.submit(form)
-    
+
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith('', 'password123', true)
     })

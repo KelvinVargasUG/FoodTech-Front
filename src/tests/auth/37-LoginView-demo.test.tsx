@@ -25,13 +25,13 @@ describe('LoginView', () => {
 
   it('debe usar demo token al hacer submit en modo demo', async () => {
     renderWithRouter(<LoginView />)
-    
+
     const demoCheckbox = document.querySelector('input[id="demoMode"]') as HTMLInputElement
     fireEvent.click(demoCheckbox)
-    
+
     const form = document.querySelector('form') as HTMLFormElement
     fireEvent.submit(form)
-    
+
     await waitFor(() => {
       expect(localStorage.getItem('auth_token')).toBe('demo-token-12345')
     })

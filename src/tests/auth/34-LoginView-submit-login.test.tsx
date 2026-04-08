@@ -28,16 +28,16 @@ describe('LoginView', () => {
 
   it('debe llamar login al hacer submit en modo login', async () => {
     renderWithRouter(<LoginView />)
-    
+
     const emailInput = document.querySelector('input[id="email"]') as HTMLInputElement
     fireEvent.change(emailInput, { target: { value: 'test@email.com' } })
-    
+
     const passwordInput = document.querySelector('input[id="password"]') as HTMLInputElement
     fireEvent.change(passwordInput, { target: { value: 'password123' } })
-    
+
     const form = document.querySelector('form') as HTMLFormElement
     fireEvent.submit(form)
-    
+
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith('test@email.com', 'password123', false)
     })

@@ -15,7 +15,7 @@ describe('authService', () => {
 
   it('debe hacer login exitoso y guardar token en localStorage', async () => {
     const mockToken = 'fake-jwt-token-12345'
-    
+
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ token: mockToken })

@@ -17,9 +17,9 @@ describe('VALIDAR: Reglas de Negocio - Seguridad', () => {
     const expiredDate = Date.now() - 1000
     localStorage.setItem('auth_token', 'expired-token')
     localStorage.setItem('auth_token_expiry', expiredDate.toString())
-    
+
     const { authService } = await import('../../services/authService')
-    
+
     expect(authService.isAuthenticated()).toBe(false)
   })
 
@@ -30,7 +30,7 @@ describe('VALIDAR: Reglas de Negocio - Seguridad', () => {
     })
 
     const { authService } = await import('../../services/authService')
-    
+
     await expect(
       authService.login('wrong@email.com', 'wrongpass')
     ).rejects.toThrow()
@@ -41,9 +41,9 @@ describe('VALIDAR: Reglas de Negocio - Seguridad', () => {
 
   it('VALIDAR: Sesión sin token es inválida - como cuenta bloqueada', async () => {
     localStorage.clear()
-    
+
     const { authService } = await import('../../services/authService')
-    
+
     expect(authService.isAuthenticated()).toBe(false)
     expect(authService.getToken()).toBeNull()
   })

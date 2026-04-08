@@ -2,7 +2,7 @@ import type { Product } from '../models/Product';
 import { ProductType } from '../models/Product';
 
 export const MENU_PRODUCTS: Product[] = [
-  // Bebidas Gourmet
+
   {
     id: '1',
     name: 'Gin Tonic Premium',
@@ -52,7 +52,6 @@ export const MENU_PRODUCTS: Product[] = [
     price: 6,
   },
 
-  // Platos Calientes Gourmet
   {
     id: '7',
     name: 'Risotto de Trufa Negra',
@@ -102,7 +101,6 @@ export const MENU_PRODUCTS: Product[] = [
     price: 40,
   },
 
-  // Ensaladas Gourmet
   {
     id: '13',
     name: 'Ensalada de Burrata',

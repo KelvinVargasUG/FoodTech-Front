@@ -14,7 +14,7 @@ describe('calculateTotalPrice', () => {
       { name: 'Risotto', type: 'HOT_DISH' as const, quantity: 1, price: 25 },
     ]
     const result = calculateTotalPrice(pedido)
-    expect(result).toBe(45) // (2*10) + (1*25) = 45
+    expect(result).toBe(45) 
   })
 
   it('retorna precio directo si hay un solo producto', () => {
@@ -22,7 +22,7 @@ describe('calculateTotalPrice', () => {
       { name: 'Vino', type: 'DRINK' as const, quantity: 3, price: 8 },
     ]
     const result = calculateTotalPrice(pedido)
-    expect(result).toBe(24) // 3*8 = 24
+    expect(result).toBe(24) 
   })
 })
 

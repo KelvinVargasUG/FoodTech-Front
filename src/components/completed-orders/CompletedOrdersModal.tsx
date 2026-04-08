@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import type { CompletedOrder } from '../../models/CompletedOrder';
 
 interface CompletedOrdersModalProps {
@@ -27,8 +27,6 @@ export const CompletedOrdersModal = ({
 }: CompletedOrdersModalProps) => {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
-  const [nameErrors, setNameErrors] = useState<Record<string, string>>({});
-
   const sortedOrders = useMemo(() => {
     return [...orders].sort(
       (a, b) => b.completedAt.getTime() - a.completedAt.getTime()
@@ -196,15 +194,11 @@ export const CompletedOrdersModal = ({
                         onClick={async () => {
                           const numericOrderId = Number(order.id);
                           if (Number.isNaN(numericOrderId)) {
-                            // Ignorar id invalido internamente o manejar si es necesario
+
                             return;
                           }
 
-                          try {
-                            await onInvoice(numericOrderId);
-                          } catch {
-                            // Error manejado en componente padre / hook
-                          }
+                          await Promise.resolve(onInvoice(numericOrderId)).catch(() => undefined);
                         }}
                         disabled={invoiceLoadingById[order.id]}
                         className="gold-gradient text-midnight font-bold text-xs uppercase tracking-[0.2em] px-6 py-3 rounded-xl shadow-lg shadow-primary/20 hover:brightness-110 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
